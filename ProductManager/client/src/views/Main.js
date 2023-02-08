@@ -4,11 +4,15 @@ import ProductList from '../components/ProductList'
 
 const Main = () => {
     const [products, setProducts]= useState([])
+
+    const removeFromDom = (id)=>{
+        setProducts(products.filter(product=>product._id !== id))
+    }
     return (
         <div>
             <ProductForm products={products} setProducts={setProducts}/>
             <hr/>
-            <ProductList products={products} setProducts={setProducts}/>
+            <ProductList products={products} setProducts={setProducts} removeFromDom={removeFromDom}/>
         </div>
     );
 };

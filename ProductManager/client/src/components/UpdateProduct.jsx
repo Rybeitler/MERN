@@ -1,33 +1,43 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios'
+import {useParams, useNavigate} from 'react-router-dom'
 
 
-const ProductForm = (props) => {
-    const {products, setProducts} = props;
+const UpdateProduct = () => {
+    const {id} = useParams();
+    const navigate = useNavigate();
     const [title, setTitle] = useState('')
     const [price, setPrice] = useState(0)
     const [description, setDescription] = useState('')
-    
-    const submitHandler = (e)=>{
-        e.preventDefault();
-        axios.post('http://localhost:8000/api/product',{
+
+    useEffect(()=>{
+        axios.get(`http://localhost:8000/api/product/${id}`)
+            .then(res=>{
+                setTitle(res.data.title)
+                setPrice(res.data.price)
+                setDescription(res.data.description)
+            })
+            .catch(err=>console.log(err))
+    },[])
+
+    const updateProduct = (e)=>{
+        e.preventDefault()
+        axios.put(`http://localhost:8000/api/product/${id}`, {
             title,
             price,
             description
         })
             .then(res=>{
-                setProducts([...products, res.data])
-            })
-            .catch(err=>console.log(err));
-        setTitle('')
-        setPrice(0)
-        setDescription('')
+                console.log(res)
+                navigate('/')
+        })
+            .catch(err=>console.log(err))
     }
 
     return (
         <div>
-            <h2>Add a New Product</h2>
-            <form onSubmit={submitHandler}>
+            <h2>Update a Product</h2>
+            <form onSubmit={updateProduct}>
                 <div>
                     <label>Title:</label>
                     <input type="text" name='title' value={title} onChange={(e)=>setTitle(e.target.value)}/>
@@ -48,4 +58,5 @@ const ProductForm = (props) => {
 
 
 
-export default ProductForm;
+
+export default UpdateProduct;
