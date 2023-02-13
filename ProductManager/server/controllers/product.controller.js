@@ -18,14 +18,14 @@ const getProduct = (req, res) =>{
         .catch(err=>res.json(err))
 }
 const updateProduct = (req, res) =>{
-    Product.findOneAndUpdate({_id:req.params.id}, req.body, {new:true})
+    Product.findOneAndUpdate({_id: req.params.id}, req.body, {new:true})
         .then(updated=>res.json(updated))
         .catch(err=>console.log(err))
 }
 const deleteProduct = (req, res)=>{
-    Product.deleteOne({_id:req.params.id})
+    Product.deleteOne({_id: req.params.id})
         .then(confirm=>res.json(confirm))
-        .catch(err=>req.json(err))
+        .catch(err=>res.json(err))
 }
 
 module.exports ={

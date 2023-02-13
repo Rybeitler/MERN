@@ -1,18 +1,34 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import ProductForm from '../components/ProductForm';
 import ProductList from '../components/ProductList'
+import axios from 'axios';
 
 const Main = () => {
-    const [products, setProducts]= useState([])
+    const [allProducts, setAllProducts]= useState([])
 
-    const removeFromDom = (id)=>{
-        setProducts(products.filter(product=>product._id !== id))
+    useEffect(()=>{
+        axios.get("http://localhost:8000/api/product")
+            .then((res)=>{
+                setAllProducts(res.data);
+            })
+            .catch((err)=>console.log(err))
+    },[])
+    
+
+    const createProduct = (formData) =>{
+        axios.post('http://localhost:8000/api/product', formData)
+            .then(res=>{
+                setAllProducts([...allProducts, res.data])
+            })
+            .catch(err=>console.log(err))
     }
+
     return (
         <div>
-            <ProductForm products={products} setProducts={setProducts}/>
+            <h2>Add a Product!</h2>
+            <ProductForm onSubProp={createProduct} initTitle='' initPrice='' initDesc=''/>
             <hr/>
-            <ProductList products={products} setProducts={setProducts} removeFromDom={removeFromDom}/>
+            <ProductList allProducts={allProducts}/>
         </div>
     );
 };

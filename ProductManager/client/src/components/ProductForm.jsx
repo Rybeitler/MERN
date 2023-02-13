@@ -1,32 +1,23 @@
 import React, {useState} from 'react';
-import axios from 'axios'
+
 
 
 const ProductForm = (props) => {
-    const {products, setProducts} = props;
-    const [title, setTitle] = useState('')
-    const [price, setPrice] = useState(0)
-    const [description, setDescription] = useState('')
+    const {initTitle, initPrice, initDesc, onSubProp} = props;
+    const [title, setTitle] = useState(initTitle)
+    const [price, setPrice] = useState(initPrice)
+    const [description, setDescription] = useState(initDesc)
     
     const submitHandler = (e)=>{
         e.preventDefault();
-        axios.post('http://localhost:8000/api/product',{
-            title,
-            price,
-            description
-        })
-            .then(res=>{
-                setProducts([...products, res.data])
-            })
-            .catch(err=>console.log(err));
-        setTitle('')
-        setPrice(0)
-        setDescription('')
+        onSubProp({title, price, description});
+        setTitle(initTitle);
+        setPrice(initPrice);
+        setDescription(initDesc)
     }
 
     return (
         <div>
-            <h2>Add a New Product</h2>
             <form onSubmit={submitHandler}>
                 <div>
                     <label>Title:</label>
